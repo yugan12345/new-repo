@@ -1,3 +1,14 @@
-from hello_word import chai
+import time
 
-chai(5)
+def timer(func):
+    def wrapper(*args,**kwargs):
+        start=time.time()
+        result=func(*args,**kwargs)
+        end=time.time()
+        print(f"{func.__name__} ran in {end-start} time")
+        return result
+    return wrapper
+@timer
+def example_func(n):
+    time.sleep(n)
+example_func(2)
