@@ -1,31 +1,37 @@
-import numpy as np
-from scipy.stats import lognorm, gumbel_r
 import matplotlib.pyplot as plt
-s_lognorm = 0.5 
-scale_lognorm = np.exp(1)
+import numpy as np
 
+# Parameters
+t_stop = 0
+t_release = 5/60  # hours (~0.0833 h)
 
-loc_gumbel = 2.0
-scale_gumbel = 1.0
+# time arrays
+t = np.linspace(0, 0.5, 200)
 
+# Shockwave speeds
+v_form = -30  # km/h backward forming shock
+v_recover = -40  # km/h backward recovery shock
 
-x = np.linspace(0, 10, 500)
+# Forming shock line (from t=0)
+x_form = v_form * (t - t_stop)
 
-pdf_lognorm = lognorm.pdf(x, s=s_lognorm, scale=scale_lognorm)
+# Recovery line (from t_release onward)
+t_rec = np.linspace(t_release, 0.5, 200)
+x_rec = v_recover * (t_rec - t_release)
 
+# Compute meeting point
+# -30 t_m = -40 (t_m - t_release)
+# 10 t_m = 40 t_release
+t_m = 4 * t_release
+x_m = v_form * (t_m - t_stop)
 
-pdf_gumbel = gumbel_r.pdf(x, loc=loc_gumbel, scale=scale_gumbel)
+plt.figure()
+plt.plot(t, x_form, label="Backward Forming Shock")
+plt.plot(t_rec, x_rec, label="Backward Recovery Shock")
+plt.vlines(t_m, x_m-5, x_m+5, linestyles='dashed', label="Stationary Shock Front")
 
-plt.figure(figsize=(10, 6))
-plt.plot(x, pdf_lognorm, label=f'Log-normal (s={s_lognorm}, scale={scale_lognorm:.2f})', color='blue')
-plt.plot(x, pdf_gumbel, label=f'Gumbel (loc={loc_gumbel}, scale={scale_gumbel})', color='red', linestyle='--')
-
-plt.title('Comparison of Log-normal and Gumbel Distributions')
-plt.xlabel('Value')
-plt.ylabel('Probability Density')
+plt.xlabel("Time (hours)")
+plt.ylabel("Distance (km, upstream negative)")
+plt.title("Time–Distance Diagram of Shockwaves")
 plt.legend()
-plt.grid(True)
-plt.ylim(bottom=0)
-plt.xlim(left=0)
-
 plt.show()
