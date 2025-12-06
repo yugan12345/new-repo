@@ -1,21 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Parameters
 t_stop = 0
-t_release = 5/60  # hours (~0.0833 h)
-
-# time arrays
+t_release = 5/60  
 t = np.linspace(0, 0.5, 200)
 
-# Shockwave speeds
-v_form = -30  # km/h backward forming shock
-v_recover = -40  # km/h backward recovery shock
-
-# Forming shock line (from t=0)
+v_form = -30 
+v_recover = -40 
 x_form = v_form * (t - t_stop)
 
-# Recovery line (from t_release onward)
 t_rec = np.linspace(t_release, 0.5, 200)
 x_rec = v_recover * (t_rec - t_release)
 
